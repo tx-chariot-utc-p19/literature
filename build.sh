@@ -1,5 +1,5 @@
 #!/bin/sh
-pdf="pdflatex -shell-escape main.tex"
+pdf="pdflatex --shell-escape main.tex"
 bib="biber main"
 if [ "$1" = "bib" ]; then
 echo "compiler avec biblio!"

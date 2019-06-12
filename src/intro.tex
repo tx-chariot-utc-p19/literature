@@ -1,0 +1,23 @@
+\section*{Introduction}
+
+\subsection{Contexte}
+
+\paragraph{Problématique}
+La problématique initiale était la suivante: comment optimiser le trajet d’un chariot élévateur dans un entrepôt sans qu’il ne se retourne ou ne renverse les marchandises qu’il transporte ? Les termes "optimiser le trajet" ayant plusieurs sens, nous en avons choisi deux:
+\begin{itemize}
+	\item la maximisation de la vitesse, étant donné une trajectoire donnée;
+	\item l'optimisation de la trajectoire.
+\end{itemize}
+\paragraph{Problème}
+On a choisi de représenter l'entrepôt sous la forme d'un quadrillage, dont les lignes constituent des couloirs. Le problème consiste en le calcul d'une trajectoire optimale en temps, passant par des points des couloirs. Lors de la modélisation du chariot, on a fait plusieurs simplifications détaillées plus loin.
+\subsection{Méthodologie}
+\paragraph{Ambivalence de la problématique}
+Les deux problèmes, pris seuls, peuvent être résolus par des techniques bien connues. Pour la première problématique, nous avons modélisé le chariot en simplifiant sa géométrie, et nous avons utilisé des calculs de dynamique pour déterminer sa vitesse max dans un virage (étant donnés le rayon de courbure et la répartition de la masse du chariot), ainsi que des calculs de frottements pour calculer la vitesse max étant donné un objectif de freinage et d'arrêt. Etant donné une trajectoire fixée, on peut ainsi minimiser le temps de parcours, en maximisant la vitesse.\\
+Pour la seconde problématique, nous avons utilisé des algorithmes de cheminement connus et prouvés (Dijkstra). Etant donné un graphe, on peut minimiser la distance parcourue.\\
+Mais le but est d'optimiser la trajectoire en temps, et non pas en distance. Lorsqu'on combine les deux modèles, pour le problème qu'on s'est donnés (hangar en quadrillage), on se rend bien compte qu'on ne peut pas assimiler les variations de la distance aux variations du temps, puisque la forme de la trajectoire influence directement la vitesse max du chariot.\\
+Notre méthodologie a été cartésienne: nous avons d'abord décomposé notre problème en deux éléments simples (triviaux car des méthodes connues existent), puis nous l'avons recomposé. Ce cheminement sera suivi dans le présent rapport.
+
+\subsection{Remerciements}
+Nous tenons à remercier M. Jean-Luc Dulong (Maître de Conférences Roberval FRE UTC-CNRS 2012 jean-luc.dulong@utc.fr);\\
+et Mme. Delphine Viandier (professeur de physique-chimie MP, lycée Pierre d'Ailly Compiègne delphine.viandier@worldonline.fr), pour leur suivi pédagogique tout au long de ce projet.\\
+Nous remercions également le lycée Pierre d'Ailly pour le financement de notre prototype.\\

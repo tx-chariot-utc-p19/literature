@@ -1,5 +1,7 @@
 #output en pdf
 *.pdf
+#output de l'extension svg
+*.pdf_tex
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
