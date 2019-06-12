@@ -45,12 +45,17 @@
 \usepackage{url}            % For quickly inserting links
 \usepackage[final]{pdfpages} % Pour inclure des .pdf
 
+
 \usepackage{fancyhdr}
 
 \usepackage{multicol}
 \usepackage{csquotes}
 \usepackage[backend=biber]{biblatex}
 \addbibresource{bibli.bib}
+
+
+\usepackage{svg} %pour include des .svg
+
  
 \renewcommand{\footrulewidth}{0.4pt}% default is 0pt
 

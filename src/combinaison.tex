@@ -1,0 +1,40 @@
+\section{Combinaison des deux modèles}
+\subsection{Décomposition du problème}
+Il s'agit à présent de partir du problème initial, de le découper en sous-éléments qu'on sait résoudre grâce aux méthodes présentées précédemment, puis de recombiner ces sous-éléments.\\
+Partons du modèle de la grille, qui modélise le hangar (en figure \ref{fig:grille1}).\\
+\begin{figure}[h]
+	\centering
+	\includesvg[height=5cm]{grille1}
+	\caption{Modèle du hangar avec les points imposés de la trajectoire}
+	\label{fig:grille1}
+\end{figure}
+Une approche naïve consisterait à appliquer directement l'algorithme de Dijkstra à toute la grille. Pour modéliser cette grille, il faut construire un graphe non orienté à arêtes valuées. Pour notre problème, chaque arête doit représenter un unique chemin, et sa valuation le temps parcouru.\\
+Or 5 segments consécutivement alignés, ce n'est pas la même chose que 5 segments consécutivement perpendiculaires. Ces deux chemins auront donc une valuation différente. La grille n'est donc pas le graphe que l'on souhaite.\\
+Comme la grille impose un chemin le long de ses couloirs, on ne peut pas assimiler le graphe à l'ensemble des points imposés et les relier. Si on voulait énumérer l'ensemble des chemins possibles, on obtiendrait un graphe avec beaucoup plus d'arêtes que de segments de couloir. Ce qui fait qu'on doit calculer un très grand nombre de valuations. Il est donc impossible d'appliquer directement Dijkstra à la grille.
+
+\subsubsection{Application locale multiple}
+\paragraph{Par énumération naïve}Pour éviter une énumérations de tous les chemins préalable à leur valuation: on va faire cette énumération de façon plus locale, seulement là où on en a besoin. En effet, il nous est inutile de calculer l'ensemble des chemins entre deux points par lesquels on ne passera jamais. Un moyen simple de vérifier si un chemin ne sera jamais le meilleur chemin, est de vérifier s'il appartient à la grille de taille minimum contenant les deux points imposés. Dans la figure \ref{fig:grille2} on montre un exemple de chemin qui ne peut être un chemin optimal.\\
+\begin{figure}[h]
+	\centering
+	\includesvg[height=4cm]{grille2}
+	\caption{Le chemin rouge ne peut être un chemin optimal entre A et B, car il sort de la grille verte délimitée par A et B}
+	\label{fig:grille2}
+\end{figure}
+Une fois qu'on a réduit l'étude des chemins possible à ceux de la sous-grille, il devient plus raisonnable d'énumérer tous les chemins. On a commencé à dessiner des chemins entre A et B en figure \ref{fig:grille3}.\\
+\begin{figure}[h]
+	\centering
+	\includesvg[height=4cm]{grille3}
+	\caption{On commence à énumérer les chemins dans la sous-grille délimitée par A et B}
+	\label{fig:grille3}
+\end{figure}
+
+Pour encore améliorer ce traitement, on peut déjà aussi enlever les arêtes qui ne vont pas jusqu'à B. On obtient alors un graphe non traitable par un Dijkstra, avec un algorithme mauvais, mais qui a été appliqué localement donc sur des données de taille raisonnable. On peut voir un exemple de résultat en figure \ref{fig:grille4}.\\
+\begin{figure}
+	\centering
+	\includesvg[height=4cm]{grille4}
+	\caption{On énumèré tous les chemins possibles; c'est un mauvais algorithme, mais il est appliqué sur de petites données.}
+	\label{fig:grille4}
+\end{figure}
+\paragraph{Par minimisation des virages}
+L'idée de la décomposition en sous-problèmes locaux est bonne, mais l'algorithme d'énumération utilisé dans chaque sous-problème local est très mauvais.\\
+On peut le remplacer par un algorithme beaucoup plus puissant, mais pas forcément exact, en faisant une hypothèse: en supposant qu'une ligne droite est forcément plus rapide qu'un virage. Nous discuterons de la validité de cette hypothèse plus bas. En la supposant vraie, on n'a plus qu'à minimiser le nombre de virages, il suffit de construire la plus grande ligne droite, donc de parcourir la sous-grille par l'un de ses deux côtés (voir figure \ref{fig:grille5}).
