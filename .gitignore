@@ -1,3 +1,5 @@
+#vim
+*.swp
 #output en pdf
 *.pdf
 #output de l'extension svg

@@ -8,12 +8,12 @@ Partons du modèle de la grille, qui modélise le hangar (en figure \ref{fig:gri
 	\caption{Modèle du hangar avec les points imposés de la trajectoire}
 	\label{fig:grille1}
 \end{figure}
-Une approche naïve consisterait à appliquer directement l'algorithme de Dijkstra à toute la grille. Pour modéliser cette grille, il faut construire un graphe non orienté à arêtes valuées. Pour notre problème, chaque arête doit représenter un unique chemin, et sa valuation le temps parcouru.\\
-Or 5 segments consécutivement alignés, ce n'est pas la même chose que 5 segments consécutivement perpendiculaires. Ces deux chemins auront donc une valuation différente. La grille n'est donc pas le graphe que l'on souhaite.\\
-Comme la grille impose un chemin le long de ses couloirs, on ne peut pas assimiler le graphe à l'ensemble des points imposés et les relier. Si on voulait énumérer l'ensemble des chemins possibles, on obtiendrait un graphe avec beaucoup plus d'arêtes que de segments de couloir. Ce qui fait qu'on doit calculer un très grand nombre de valuations. Il est donc impossible d'appliquer directement Dijkstra à la grille.
+\paragraph{Application directe de Dijkstra}Une approche naïve consisterait à appliquer directement l'algorithme de Dijkstra à toute la grille. Pour modéliser cette grille, il faut construire un graphe non orienté à arêtes valuées. Pour notre problème, chaque arête doit représenter un unique chemin, et sa valuation le temps parcouru.\\
+Or 5 segments consécutivement alignés, ce n'est pas la même chose que 5 segments consécutivement perpendiculaires: le modèle mécanique nous dit qu'on va être obligé de ralentir avant de prendre chaque virage. Ces deux chemins auront donc une valuation différente. Ils seront donc représentés par deux arêtes différentes. Dans certains cas, il y a donc plus d'arêtes que de segments de couloir. On ne peut donc pas appliquer directement Dijkstra à la grille, ce n'est pas le graphe que l'on souhaite, il faut opérer une transformation, ou utiliser un algorithme plus adapté. C'est ce que nous verrons plus loin.\\
+L'impossibilité d'appliquer directement Dijkstra peut être vue différemment. Ce qui nous intéresse, c'est de choisir le meilleur chemin passant par les différents points imposés.En supposant qu'il n'y ait pas de grille, on pourrait relier les points par des segments de droite, valués par leur longueur ou leur temps, et directement appliquer Dijkstra. Mais la grille impose un chemin le long de ses couloirs, donc on ne peut pas assimiler le graphe à l'ensemble des points imposés et les relier, puisque la ligne droite n'existe plus, et qu'il existe plusieurs moyens d'aller d'un point imposé à l'autre, et que certains sont meilleurs que d'autres. Si on voulait énumérer l'ensemble des chemins possibles, on obtiendrait un graphe avec beaucoup plus d'arêtes que de segments de couloir. Ce qui fait qu'on doit calculer un très grand nombre de valuations. Il est donc impossible d'appliquer directement Dijkstra à la grille.
 
 \subsubsection{Application locale multiple}
-\paragraph{Par énumération naïve}Pour éviter une énumérations de tous les chemins préalable à leur valuation: on va faire cette énumération de façon plus locale, seulement là où on en a besoin. En effet, il nous est inutile de calculer l'ensemble des chemins entre deux points par lesquels on ne passera jamais. Un moyen simple de vérifier si un chemin ne sera jamais le meilleur chemin, est de vérifier s'il appartient à la grille de taille minimum contenant les deux points imposés. Dans la figure \ref{fig:grille2} on montre un exemple de chemin qui ne peut être un chemin optimal.\\
+\paragraph{Par énumération naïve}Pour éviter une énumérations de tous les chemins préalable à leur valuation: on va faire cette énumération de façon plus locale, seulement là où on en a besoin. En effet, si on sait à l'avance qu'un segment de couloirs ne fera jamais partie d'un chemin optimal, il est inutile de calculer l'ensemble des chemins passant par ce segment. Une condition suffisante (mais pas nécessaire) permettant d'affirmer qu'un segment de couloir ne fera jamais partie d'un meilleur chemin entre deux points imposés, est de vérifier s'il appartient à la grille de taille minimum contenant les deux points imposés. Dans la figure \ref{fig:grille2} on montre un exemple de segment de couloir qui ne peut constituer un chemin optimal.\\
 \begin{figure}[h]
 	\centering
 	\includesvg[height=4cm]{grille2}
@@ -28,7 +28,7 @@ Une fois qu'on a réduit l'étude des chemins possible à ceux de la sous-grille
 	\label{fig:grille3}
 \end{figure}
 
-Pour encore améliorer ce traitement, on peut déjà aussi enlever les arêtes qui ne vont pas jusqu'à B. On obtient alors un graphe non traitable par un Dijkstra, avec un algorithme mauvais, mais qui a été appliqué localement donc sur des données de taille raisonnable. On peut voir un exemple de résultat en figure \ref{fig:grille4}.\\
+Pour encore améliorer ce traitement, on peut aussi enlever les arêtes qui ne vont pas jusqu'à B. On obtient alors un graphe non traitable par un Dijkstra, avec un algorithme mauvais, mais qui a été appliqué localement donc sur des données de taille raisonnable. On peut voir un exemple de résultat en figure \ref{fig:grille4}.\\
 \begin{figure}
 	\centering
 	\includesvg[height=4cm]{grille4}
@@ -37,4 +37,10 @@ Pour encore améliorer ce traitement, on peut déjà aussi enlever les arêtes q
 \end{figure}
 \paragraph{Par minimisation des virages}
 L'idée de la décomposition en sous-problèmes locaux est bonne, mais l'algorithme d'énumération utilisé dans chaque sous-problème local est très mauvais.\\
-On peut le remplacer par un algorithme beaucoup plus puissant, mais pas forcément exact, en faisant une hypothèse: en supposant qu'une ligne droite est forcément plus rapide qu'un virage. Nous discuterons de la validité de cette hypothèse plus bas. En la supposant vraie, on n'a plus qu'à minimiser le nombre de virages, il suffit de construire la plus grande ligne droite, donc de parcourir la sous-grille par l'un de ses deux côtés (voir figure \ref{fig:grille5}).
+On peut le remplacer par un algorithme beaucoup plus puissant, mais pas forcément exact, en faisant une hypothèse: en supposant qu'une ligne droite est forcément plus rapide qu'un virage. Nous discuterons de la validité de cette hypothèse plus bas. En la supposant vraie, on n'a plus qu'à minimiser le nombre de virages, il suffit de construire la plus grande ligne droite, donc de parcourir la sous-grille par l'un de ses deux côtés (voir figure \ref{fig:grille5}). On a ainsi une heuristique très simple et très puissante permettant de calculer un bon chemin pour tout couple de points, et le meilleur chemin lorsque l'hypothèse soit valide.\\
+\begin{figure}
+	\centering
+	\includesvg[height=6cm]{grille5}
+	\caption{Entre deux points de la grille, il n'existe que deux chemins minimisant le nombre de virages.}
+	\label{fig:grille5}
+\end{figure}
