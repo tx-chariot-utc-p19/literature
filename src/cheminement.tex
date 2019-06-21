@@ -1,1 +1,12 @@
-\section{Dijkstra c'est cool}
+\section{Problèmes de cheminement}
+Beaucoup de problèmes d'optimisation peuvent être modélisés par un graphe et résolus par un algorithme de cheminement. Mais certains problèmes sont difficiles et on ne connaît pas d'algorithme pour les résoudre en temps polynomial; c'est le cas du problème du voyageur de commerce, qui ressemble beaucoup au problème qu'on veut résoudre. \cite{wiki:voyageurCommerce}.
+\paragraph{L'algorithme de Dijkstra}
+Un algorithme connu qui pourrait résoudre le problème de cheminement dans la grille est l'algorithme de Dijkstra.\\
+
+Il sert à résoudre le problème du plus court chemin. Il permet de déterminer un plus court chemin pour se rendre d'un sommet à un autre connaissant le coût de chaque arête. Plus précisément, il calcule des plus courts chemins à partir d'une source dans un graphe (orienté ou non) pondéré par des réels positifs. On peut aussi l'utiliser pour calculer un plus court chemin entre un sommet de départ et un sommet d'arrivée. L'algorithme est expliqué dans un article de son auteur éponyme, qu'on peut trouver à la BUTC ou en ligne.\cite{dijkstra}.\\
+
+Cet algorithme est de complexité polynomiale. Plus précisément, pour n sommets et a arêtes, le temps est en $O((n+a) log n)$, voire en $O(a + n log n)$.\cite{wiki:dijkstra}.\\
+
+Il doit cependant être adapté à notre problème, puisque dans une grille de dimensions $mn$, on a $m\cdot n$ sommets et $\frac{k(k-1)}{2}$ arcs où $k=m\cdot n$. Pour une grille 5*5, on a donc 25 sommets et 300 arcs, et il faut calculer le coût en temps de chacun de ces arcs. En supposant que le calcul de coût se fait en $O(1)$, le calcul total se fait donc en $O((n\cdot m)^2)$, ce qui est plutôt coûteux, surtout qu'en application $m$ et $n$ pourraient être plutôt grands (environ $10^2$).\\
+
+On verra en section \ref{combinaison} un algorithme en $O(j^2)$ où $j$ est le nombre de points d'arrêts imposés. En pratique, j est petit (environ $10^1$) et nécessairement $j<m\cdot n$. On pourra aussi voir une description en langage naturel de l'algorithme de Dijktra, et une explication des modifications que nous lui avons apporté. On pourra voir dans le code livré une implémentation classique de Dijkstra en plus de notre version simplifiée.
