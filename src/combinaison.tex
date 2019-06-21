@@ -68,4 +68,57 @@ En pratique, il y a également une accélération sur une ligne droite qui perme
 Finalement, on peut donc utiliser cette heuristique dans tous les cas.
 \subsection{Recombinaison des solutions locales et application du modèle mécanique}
 On a donc montré que notre heuristique locale était valable quel que soit le modèle mécanique (à condition d'utiliser une grille). Quel que soit le couple de  points imposés, on peut donc déterminer un chemin optimal entre ces deux points. Il s'agit à présent de tracer tous les chemins localement optimaux, puis d'appliquer Dijkstra au graphe ainsi obtenu.\\
-Le nombre d'arête est donc $n!$ où $n$ est le nombre de points imposés.
+Le nombre d'arête est donc $\frac{n(n-1)}{2}$ où $n$ est le nombre de points imposés. On obtient ainsi un graphe simplifié, comme illustré en figure \ref{fig:grapheSimp}. Ce nombre est totalement indépendant de la taille de la grille.
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{grapheSimp.png}
+	\caption{Comme on connaît le chemin optimal entre chaque couple de points, et qu'on sait à l'avance par quels points on veut passer, on peut passer de la grilleà un graphe simplifié, dont les arêtes sont valuées en temps.}
+	\label{fig:grapheSimp}
+\end{figure}
+\subsection{Application d'un Dijkstra simplifié}
+\paragraph{L'algorithme de Dijkstra}
+L'algorithme de Dijkstra s'applique à un graphe non orienté dont toutes les arêtes ont un poids. Il a pour but de trouver le chemin le plus court entre un sommet de départ et un sommet d'arrivée. En langage naturel, l'algorithme de Dijkstra peut être décrit ainsi:
+\begin{itemize}
+	\item A chaque sommet est associée une distance au sommet de départ, qu'on appelera la "distance à 0". Initialement, on met tous les sommets à l'infini (sauf le sommet de départ, qui est à 0 de lui-même).
+	\item A chaque sommet, on associe l'attribut "non visité".
+	\item Il faut choisir un sommet, qu'on appelera le sommet "en cours". On choisit le sommet initial.
+	\item Tant qu'une des conditions d'arrêt ci-dessous n'est pas atteinte:
+	\begin{itemize}
+		\item Pour chaque voisin non visité du sommet en cours:
+			\begin{itemize}
+				\item Calculer une nouvelle distance à 0 du voisin, en additionnant le poids de l'arête à la distance à 0 du sommet courant.
+				\item Si la nouvelle distance à 0 du voisin est inférieure à la distance à 0 qui lui est actuellement associée, alors remplacer l'ancienne par la nouvelle. Sinon, garder l'ancienne.
+			\end{itemize}
+		\item Marquer le sommet en cours comme étant visité.
+		\item Si le sommet de destination a été atteint, sortir de la boucle.
+		\item Si la plus petite distance à 0 de l'ensemble des sommets non visités est l'infini, cela signifie qu'il n'existe aucun chemin passant par le sommet de départ et le sommet d'arrivée. Sortir de la boucle.
+		\item Dans l'ensemble des sommets non visités, choisir celui dont la distance à 0 est minimale en tant que sommet en cours.
+	\end{itemize}
+	\item Maintenant que les distances à 0 ont été valuées, pour construire le plus court chemin, il suffit de partir du sommet de départ, et de choisir à chaque étape le voisin dont la distance à 0 est minimale.
+\end{itemize}
+\paragraph{Simplification de Dijkstra pour notre problème}
+Il existe des différences entre notre problème et celui que Dijkstra résout:
+\begin{itemize}
+	\item Il faut passer par tous les sommets;
+	\item Deux sommets peuvent être alignés ou non alignés dans la grille, et cela modifie le coût. Il y a donc un coût intrinsèque à l'arête, mais aussi un coût lié à un triplet (arête, sommet, arête).
+	\item Le coût entre deux sommets du graphe simplifié est déjà considéré comme "raisonnable" donc on n'est pas dans la situation d'un voyageur de commerce (on peut se contenter d'une solution bonne mais non optimale).
+	\item On a un graphe fortement connexe (ce qui n'est pas forcément le cas d'un problème de Dijkstra). En ignorant le point précédent, cela signifie qu'il suffit de construire le chemin en prenant toujours l'arête la plus légère pour trouver le chemin optimal.
+\end{itemize}
+Avec les adaptations mentionnées ci-dessus, on obtient l'algorithme qui a été implémenté dans notre prototype.
+\subsection{Comparaison avec d'autres algorithmes et performances}
+\paragraph{Autres algorithmes}
+Pour tester notre méthode, nous avons également implémenté d'autres algorithmes connus:
+\begin{itemize}
+	\item Un algorithme génétique de voyageur de commerce;
+	\item L'algorithme de Ford-Bellman.
+\end{itemize}
+Faute de temps, nous n'avons pu les tester expérimentalement, mais ils sont déjà prêts à l'usage dans le code que nous avons livré.
+\paragraph{Complexité}
+\begin{itemize}
+	\item En ce qui concerne la complexité en mémoire, comme nous l'avons mentionné, notre graphe simplifié possède $\frac{n(n-1)}{2}$, donc l'ordre est $O(n^2)$ où $n$ est le nombre de points d'arrêt imposé.\\
+	\item Pour la complexité en temps, l'algorithme est séparé en deux parties:
+	\begin{itemize}
+			\item La valuation des chemins optimaux dans les sous-grille, en $O(n^2)$ (une opération par arête du graphe simplifié).
+			\item Le calcul du chemin optimal, en $O(n)$ dans le meilleur des cas et en $O(n^2)$ dans le pire des cas.
+	\end{itemize}
+\end{itemize}
