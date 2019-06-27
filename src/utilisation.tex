@@ -51,16 +51,12 @@ Le prototype numérique est pour le moment totalement virtuel. Il prend en entr�
 			\item $l$ écartement des roues
 		\end{itemize}
 \end{itemize}
+Tous les calculs ont été séparés dans plusieurs fonctions python clairement identifiées, donc facilement réutilisables dans un autre projet (par exemple la programmation d'un robot). Mais pour en faire la démonstration, on a codé un fichier main qui permet d'entrer certains paramètres, puis qui lance les calculs. Voici un exemple d'exécution du main:
 \begin{minted}{bash}
- dimensions de la grille:
+dimensions de la grille:
 lignes: 5
 colonnes : 4
 Soit 20 intersections entre couloirs
-╬╬╬╬
-╬╬╬╬
-╬╬╬╬
-╬╬╬╬
-╬╬╬╬
 Largeur de couloir en mètres:0.2
 Entrez les coordonnées des points par lesquels le chariot doit passer. (0,0) représente l'intersection en bas à gauche, (0,3) représente l'intersection en bas à droite.
 Le premier point saisi sera le point de départ.
@@ -82,12 +78,8 @@ Entrer un nouveau point d'arrêt imposé? (0/1)0
  [0. 0. 0. 1.]
  [0. 0. 0. 0.]
  [0. 0. 0. 1.]]
-╬╬╬x
-╬╬╬╬
-╬╬╬x
-╬╬╬╬
-x╬╬╬
 \end{minted}
+\includegraphics{termGrillePoints.png}\\
 Dans un premier temps, le programme calcule le graphe simplifié, en utilisant le modèle mécanique. Pour chaque couple de points imposés, il minimise les virage et calcule le temps de parcours. Les sommets du graphe simplifié représentent les points d'arrêt, les arêtes sont valuées par les temps de parcours du meilleur chemin. On peut voir une capture d'écran en figure \ref{fig:grapheSimp2}.
 \begin{figure}
 	\centering
@@ -95,8 +87,9 @@ Dans un premier temps, le programme calcule le graphe simplifié, en utilisant l
 	\caption{Le graphe simplifié}
 	\label{fig:grapheSimp2}
 \end{figure}
-Le graphe calcule alors l'ordre optimal de parcours des points imposés. Il prend en compte les temps d'arrêt, et le fait que des points alignés soient préférables à des virages.
-\begin{minted}{bash}
+Le graphe calcule alors l'ordre optimal de parcours des points imposés. Il prend en compte les temps d'arrêt, et le fait que des points alignés soient préférables à des virages.\\
+Sortie finale:
+\begin{minted}{python}
 [(3, 2), (3, 4), (0, 0)]
 \end{minted}
 Les points sont identifiés par leur abscisse et leur ordonnée, et sont ordonnés.
@@ -106,3 +99,4 @@ Il y a deux fichiers non utilisés par le main :
 	\item Un algorithme génétique utilisable sur le problème du voyageur de commerce (graphe simplifié), il ne prend pas en compte les points alignés
 	\item L'algorithme original de Dijkstra utilisable sur le graphe fortement connexe de la grille
 \end{itemize}
+Ces implémentations sont celles qui ont été utilisées pour la comparaison de la complexité des algorithmes en \ref{complexite}.
