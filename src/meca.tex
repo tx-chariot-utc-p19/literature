@@ -7,3 +7,116 @@ Pour construire le modèle, nous avons fait des hypothèses simplificatrices. No
 \end{itemize}
 \label{hypProtoCommeChariot}
 Mais la validation des hypothèses sur le chariot élévateur par des mesures sur notre prototype mécanique nécessite de supposer que notre prototype mécanique est lui-même un bon modèle qui se comporte comme un chariot élévateur. Elle permet en fait de généraliser l'ensemble des productions de notre TX (modèles mécaniques et numériques, voir \ref{proto}) à tous les chariots élévateurs, et à tous les véhicules verticaux, fins et avec un centre de masse haut. Elle pourrait être appuyée par des arguments théoriques, mais le seul argument que nous fournirons est le fait que toutes les dimensions sont du même ordre de grandeur. Cette hypothèse est très forte, mais elle n'est pas critique: si elle n'était pas vraie, cela signifierait que nos productions ne seraient valables que pour notre prototype.
+\subsection{Modèle physique et résultats}
+\includesvg[height=7cm]{schema_chariot}
+\subsubsection{Vitesse max pour non glissement du colis pendant un freinage}
+On souhaite freiner sans toutefois renverser le colis en une distance $d$. Quelle est la vitesse de déplacement maximum par laquelle le colis ne se renversera pas?
+
+PFD sur le colis:\\
+\begin{itemize}
+	\item $\vec P = -mg\vec y$, $-\vec N = mg \vec y$, $fie=n{\vec a_2}$
+	\item $F = - \left\| N \right\| \mu_s\vec x = -mg\mu_s\vec x$
+\end{itemize}
+Not. $a_p$ sur accélération\\
+$\vec{\sum F_{ext}} = na_p$\\
+En projection selon les $\vec x$:\\
+$na_{px} = -na_c - \mu_s mg$
+
+Or, on veut que le colis ne glisse pas, c'est-à-dire ici $a_c=0$. D'où on veut:
+\begin{equation}
+	\label{expr:freinage:ac}
+	-a_c = \mu g
+\end{equation}
+On considère que le chariot élévateur décélère constamment. $a_c = const < 0$.
+\begin{equation}
+	\begin{array}{cc}
+		a = a_c & x = a_c \frac{t^2}{2} + v_r t \text{d'où:}\\
+		v = a_c t & \frac{a_c}{2} t^2 + v_r t - x = 0 \label{equ:freinage:posChariot}
+	\end{array}
+\end{equation}
+Après résolution du polynôme, la durée avant de stopper vaut:
+\begin{equation}
+	\label{expr:freinage:tempsFreinage}
+	t_d = \frac{-v_r + \sqrt{v_r^2 + 2a_c x}}{a_c}
+\end{equation}
+Or, on veut $v_r(t_d) = 0$.\\
+En injectant dans \ref{expr:freinage:tempsFreinage} on trouve $a_c = -\frac{v_r^2}{d}$.\\
+En injectant dans \ref{expr:freinage:ac} on trouve:
+\begin{equation}
+	\label{expr:vitesseMaxLigneDroite}
+	\frac{v_r^2}{d} = \mu_s g \Rightarrow v_r = \sqrt{\mu_s gd}
+\end{equation}
+\paragraph{Détermination pour notre prototype}
+Expérimentalement, on détermine $\mu_{acier/carton} = 0.37$, d'où $v_r = 1.91\sqrt{d}$.
+\subsubsection{Condition de dérapage}
+Virage d'angle $\alpha$, vitesse $v$, rayon $R$:
+$\vec a = -r\dot \theta^2 \vec e_r + r \ddot \theta \vec e_g$\\
+$m \vec a = m \vec g + \vec R$
+
+En projectant sur $\vec e_r$ on a:\\
+$-mr\dot \theta^2 = -R sin\alpha$
+
+En projetant sur $\vec e_z$ on a:\\
+$0 = -mg + R\cdot cos(\alpha)$ soit $ R = \frac{mg}{cos(\alpha)}$\\
+$-mR\dot \theta^2 = -\frac{mg}{cos(\alpha)}sin(\alpha) = -mg\cdot\tan(\alpha)$
+
+Or, $r\dot\theta^2 = \frac{v^2}{R}$ d'où $tan(\alpha) = \frac{v^2}{Rg}$, d'où:
+\begin{equation}
+	\label{expr:der:vitesseMaxVirage}
+	v = \sqrt{tan(alpha)Rg}
+\end{equation}
+\subsubsection{Conditions de non-renversement}
+\includesvg[width=\textwidth]{schema_chariot2}
+$\vec{OG} = \vec{OC} + \vec{CG} = R_c \vec{x_0} + \vec{e_{z1}}$ \\
+$\vec{V\left(G/R_0\right)} = \left[\frac{d\vec{OG}}{dt}\right]_{R_g} = \dot\theta \vec z_0 \lor R_c \vec x_0 + \dot \theta z_0 \lor \vec{e_{z1}}$
+
+En notant $v=R_c \dot\theta$ on obtient:
+$\vec{v\left(G/R_g\right)} = \left(R_c\right)\frac{V}{R_c}\vec g_0$\\
+$\vec{a(G/R_g)} = \frac{d\vec{V(G/R_g)}}{dt} = -\frac{V^2}{R_c} \vec x_0$\\
+$\vec{\delta(G, e/R_g)} = -e\dot\theta^2 \vec y_0 + D\dot\theta^2 \vec x_0$\\
+
+Après application du théorème de la résultante dynamique, on néglige $e\dot\theta$, en notant $N_A$ et $N_B$ les efforts normaux sur A et B, et on obtient:
+\[ \begin{array}{c}
+	N_A = m(r+e) \frac{V^2}{lR_c} + \frac{1}{2}mg  \\
+	N_B = -m(r+e) \frac{V^2}{lR_c} + \frac{1}{2}mg
+\end{array}
+\]
+Il y a renversement si $N_i > 0$.
+
+
+$N_A>0$ impossible car la roue intérieure reste en contact avec le sol. On cherche $N_B>0$ :\\
+\begin{equation}
+	\label{expr:vitesseMaxRenversement}
+	v<\sqrt{\frac{lR_c g}{2(r+e)}}
+\end{equation}
+\paragraph{Remarque} Physiquement, ce résultat est cohérent avec les lois sur les référentiels galliléens. Si $R_c$ ou $l\nearrow$ alors $V\nearrow$. Si $r$ ou $e\searrow$ alors $V\searrow$.
+
+\paragraph{Détermination pour un chariot élévateur}Avec les dimensions standard d'un chariot élévateur: $V_max = 2,03 R_c$ avec $l=1.04$, $r=0.15$, $e=1$.
+\section{Test de notre modèle physique}
+Voici un extrait de nos tests et mesures. Le but est de vérifier si le chariot se comporte comme nous l'avons prédit. Comme on a déterminé des conditions de renversement et de glissement sous la forme de vitesse limite, le but des tests est de vérifier si les renversements et glissements réels appartiennent bien à l'intervalle de la valeur prédite encadrée par les incertitudes de mesure.
+\subsection{Vitesse constante, position du centre de gravité variable}
+\begin{itemize}
+	\item rayon des roues $r$ constant
+	\item rayon de courbure $R_c$ constant
+	\item écart entre les roues $l$ constant
+\end{itemize}
+On utilise \ref{expr:vitesseMaxRenversement} pour chaque valeur de e. La vitesse $v=1.47m.s^{-1}$ est obtenue à l'aide d'un protocole expliqué plus loin.\\
+\begin{tabular}{c|c|c}
+	$e$ & $V_{max}$ & $Renversement$\\
+	\hline \hline
+	$8cm\pm 0,1cm$ & $1,75m.s^{-1} \pm 0.03$ & non\\
+	$11cm\pm 0.1cm$ & $1,49m.s^{-1} \pm 0.03$ & oui $40\%$ non $60\%$ (dix essais)\\
+	$15cm\pm 0.1cm$ & $1,27m.s^{-1} \pm 0.02$ & oui\\
+	$18cm\pm 0.1cm$ & $1,16m.s^{-1} \pm 0.02$ & oui
+\end{tabular}
+\paragraph{Détermination de la vitesse du chariot}
+Voir figure \ref{fig:chariotChrono}.
+\begin{figure}
+	\centering
+\includesvg[height=5cm]{schema_chrono}
+	\caption{On fait une mesure de vitesse moyenne sur 5m en supposant la vitesse constante.}
+	\label{fig:chariotChrono}
+\end{figure}
+On chronomètre le temps que le chariot met à parcourir 5m, on suppose que sa vitesse est constante car asservie. On obtient $v=1.47m.s^{-1}$ avec $\Delta_T = 0.3s$ et $\Delta_d = 0.01m$. D'où $\Delta V = 0.11$.
+\subsection{Appréciation des résultats} Nous avons fait d'autres tests, par exemple des tests sur l'influence de la hauteur du centre de gravité sur la validité de \ref{expr:vitesseMaxRenversement}, etc. Comme les conditions dans lesquelles nous faisions nos tests étaient extrêmes en termes de prédiction (l'incertitude des prédictions recouvrait parfois l'incertitude des mesures) en raison de la précision des mesures de tous les paramètres, nous avons vu que notre modèle n'était pas précis mais plutôt robuste puisque ses prédictions sont plutôt bonnes.
+
