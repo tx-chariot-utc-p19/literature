@@ -1,31 +1,34 @@
 \section*{Introduction}
 
-\subsection{Contexte}
+\subsection{Problématique}
+La problématique initiale était la suivante: comment optimiser le trajet d’un chariot élévateur dans un entrepôt sans qu’il ne se retourne ou ne renverse les marchandises qu’il transporte ? Nous avons choisi de dérouler cette problématique jusqu'à isoler plusieurs problèmes précis. Ces problèmes sont interdépendants, mais leur résolution demande des méthodologies différentes.
 
-\paragraph{Problématique}
-La problématique initiale était la suivante: comment optimiser le trajet d’un chariot élévateur dans un entrepôt sans qu’il ne se retourne ou ne renverse les marchandises qu’il transporte ? Les termes "optimiser le trajet" ayant plusieurs sens, nous en avons choisi deux:
-\begin{itemize}
-	\item la maximisation de la vitesse, étant donné une trajectoire donnée;
-	\item l'optimisation de la trajectoire.
-\end{itemize}
-\paragraph{Problème}
-On a choisi de représenter l'entrepôt sous la forme d'un quadrillage, dont les lignes constituent des couloirs. Le problème consiste en le calcul d'une trajectoire optimale en temps, passant par des points des couloirs. Lors de la modélisation du chariot, on a fait plusieurs simplifications détaillées plus loin.
-\subsection{Méthodologie}
-\paragraph{Ambivalence de la problématique}
-Les deux problèmes, pris seuls, peuvent être résolus par des méthodes bien connues. Pour la première problématique, nous avons modélisé le chariot en simplifiant sa géométrie, et nous avons utilisé des calculs de dynamique pour déterminer sa vitesse max dans un virage (étant donnés le rayon de courbure et la répartition de la masse du chariot), ainsi que des calculs de frottements pour calculer la vitesse max étant donné un objectif de freinage et d'arrêt. Etant donné une trajectoire fixée, on peut ainsi minimiser le temps de parcours, en maximisant la vitesse.\\
-Pour la seconde problématique, on peut utiliser des algorithmes de cheminement connus et prouvés (Dijkstra, algorithmes génétiques, Bellman-Ford). Etant donné un graphe, on peut minimiser la distance parcourue. La fonction de coût est donc une distance (au sens euclidien).\\
-Mais le but est d'optimiser la trajectoire en temps, et non pas en distance parcourue. Lorsqu'on combine les deux modèles, pour le problème qu'on s'est donnés (hangar en quadrillage), on se rend bien compte qu'on ne peut pas assimiler les variations de la distance aux variations du temps, puisque la forme de la trajectoire influence directement la vitesse max du chariot. Le coût en temps n'est pas forcément croissant par rapport à la distance totale parcourue. En fait, plusieurs chemins peuvent avoir la même distance mais des temps différents. On a en fait un problème trop complexe pour qu'on puisse résoudre ces deux problèmes de façon indépendante; il fallait qu e le calcul de l'itinéraire tienne compte de notre modèle mécanique du chariot.\\
-Mais notre méthodologie a quand même été cartésienne, parce que, naïvement, nous avons commmencé par appliquer les méthodes que nous connaissions déjà. Nous avons d'abord décomposé notre problème en des éléments simples (triviaux car des méthodes connues existent), puis nous l'avons recomposé. Ce cheminement sera suivi dans le présent rapport.
+Nous avons choisi de résoudre un problème d'optimisation, consistant à minimiser le temps de parcours d'une trajectoire dont seuls certains points sont définis. Cela signifie qu'il faut déterminer un chemin à coût minimal: c'est un problème de cheminement. Des algorithmes connus et prouvés permettent de résoudre de trouver des chemins optimaux étant donné des coûts, comme nous le verrons en \ref{cheminement}. Cependant, il reste le problème de déterminer la fonction de coût en temps.
 
-\subsection{Contenu de ce rapport}
-Bien que nos travaux aient été menés de la façon la plus rigoureuse possible et aient été en partie relus et corrigés par nos enseignants, nous ne présenterons pas nos démonstrations dans ce rapport, mais uniquement nos résultats, pour deux raisons.
+L'approche la plus simple est de faire l'hypothèse que la vitesse est constante, donc que le coût en temps est égal au coût en distance. Cependant, cette approche est très insatisfaisante car les chariots élévateurs ne sont pas très stables:
 \begin{itemize}
-	\item Premièrement, nous n'avons pas réussi à gérer notre temps correctement pour avancer aussi bien sur la formalisation de notre approche que son application; c'est pourquoi, pour effectivement rendre quelque chose de concret, nous avons préféré finir notre prototype, nos expérience et notre code. La théorie sous-jacente à nos travaux est probablement bonne, mais nous ne pouvons pas la fournir directement pour que le lecteur puisse la réutiliser et la vérifier. Cependant, il pourra essayer de reproduire notre démarche pratique, et en induire la théorie que nous avons appliqué.
-	\item Deuxièmement, nous sommes des étudiants, nous sommes encore en train d'apprendre et nous nous autorisons à faire des erreurs. Notre travail n'a pas été relu par nos pairs, nos expériences n'ont pas été reproduites par des tiers, et nous pensons que nous n'avons pas fait assez d'expérience par nous-mêmes pour être vraiment certains des résultats que nous avançons. Par conséquent, nous ne souhaitons pas que notre travail soit réellement utilisé en production car nous ne le considérons pas comme assez fiable.
+	\item Ils peuvent tomber dans un virage, si leur vitesse est trop élevée
+	\item Ils peuvent faire tomber leur colis au cours d'un freinage, si leur décélération est trop importante
 \end{itemize}
-On trouvera donc dans ce rapport un compte-rendu de notre démarche expériementale, qui part de la question posée et aboutit à la construction de modèles et de prototypes apportant une solution pratique au problème posé. Ce rapport ne se veut ni pédagogique (parce que nous ne sommes pas des enseignants), ni absolument vrai (car il existe des ouvrages de référence qui ont été prouvés, approuvés, et qui démontrent les résultats qu'ils affirment). On trouvera donc dans ce rapport des résultats qui permettent de comprendre comment nous avons mis au point nos modèles et notre prototype, et qui pourraient permettre au lecteur de reproduire notre démarche.
+Le second point fait qu'il faut beaucoup de temps aux chariots pour décélérer. Par conséquent, la longueur d'un segment de droite n'est pas directement proportionnelle à la vitesse max qui pourra être atteinte; on ne peut "profiter de la ligne droite" car on ne peut accélérer sensiblement qu'à partir d'une certaine distance de voie libre pour freiner.
+Le premier point fait que la vitesse du chariot élévateur dans un virage est sensiblement diminuée, ce qui fait qu'à distance égale, le temps nécessaire pour parcourir un segment de droite et une succession de virage est sensiblement différent.
+
+Pour ces raisons, il est absolument nécessaire de modéliser le comportement du chariot sur certaines trajectoires. Les objectifs dégagés sont donc:
+\begin{itemize}
+	\item Déterminer la vitesse max du chariot garantissant:
+		\begin{itemize}
+			\item Un non-renversement du chariot en virage
+			\item Un non-glissement du colis transporté en ligne droite
+		\end{itemize}
+	\item Déterminer le coût en temps d'une trajectoire donnée
+	\item Sélectionner la meilleure trajectoire (en temps) passant par des points imposés
+\end{itemize}
+
+C'est la résolution de ces problèmes qui sera abordée dans ce rapport.
+
+
 \subsection{Remerciements}
-Nous tenons à remercier M. Jean-Luc DULON (Maître de Conférences Roberval FRE UTC-CNRS 2012 jean-luc.dulong@utc.fr);\\
+Nous tenons à remercier M. Jean-Luc DULONG (Maître de Conférences Roberval FRE UTC-CNRS 2012 jean-luc.dulong@utc.fr);\\
 et Mme. Delphine VIANDIER (auteur d'ouvrages et professeur de physique-chimie MP, lycée Pierre d'Ailly Compiègne delphine.viandier@worldonline.fr),\\
 pour leur suivi pédagogique tout au long de ce projet.
 Nous remercions également le lycée Pierre d'Ailly qui a financé notre prototype mécanique.\\
