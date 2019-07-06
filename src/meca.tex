@@ -28,8 +28,20 @@ Mais la validation des hypothèses sur le chariot élévateur par des mesures su
 \subsection{Calculs}
 \paragraph{Vitesse de $G$ dans $R_g$}
 \[\vec{OG} = \vec{OC} + \vec{CG} = R_c \cdot \vec x_0 + e\cdot \vec z_1 = R_c \cdot \vec x_0\]
-\[\vec v(G/R_g) = \frac{d\vec{CG}}{d_t}_{R_g} = \dot \theta \vec z_0 \wedge R_c \dot \theta \vec y_0 = -R_c \dot \theta^2 \vec x_0 \]
+\[\vec V(G/R_g) = \frac{d\vec{CG}}{d_t}_{R_g} = \dot \theta \vec z_0 \wedge R_c \dot \theta \vec y_0 = -R_c \dot \theta^2 \vec x_0 \]
 Avec $ V = R_c \dot \theta$ on obtient:
 \begin{equation}
-	\vec v(G / R_g) =V \vec y_0
+	\vec V(G / R_g) =V \vec y_0
+\end{equation}
+\paragraph{Accélération de $G$ dans $R_g$}
+\[\vec a(G/R_g) = \frac{d}{dt}\vec V(G/R_g)_{R_g} = \dot \theta \vec z_0 \wedge R_c \dot \theta \vec y_0 = - R_c \dot \theta^2 \vec x_0\]
+Avec $V=R_c \dot \theta$ on obtient:
+\begin{equation}
+	\vec a(G/R_g) = - \frac{V^2}{R_c} \vec x_0
+\end{equation}
+\paragraph{QUESTION 3}
+\[ \vec \delta (G, E / R_g) = \frac{d}{dt} \vec \sigma (G, E/R_g)_{R_g} = \frac{d}{dt} \left( I(G,E) \cdot \vec \Omega (E / R_g) \right)_{R_g} = \frac{d}{dt} \left( - E \dot \theta \vec x_0 - D \dot \theta \vec y_0 + C \dot \theta \vec z_0 \right)_{R_g} \]
+Soit
+\begin{equation}
+	\vec \delta (G, E/R_g) = -E \dot \theta^2 \vec y_0 + D \dot \theta^2 \vec x_0
 \end{equation}
