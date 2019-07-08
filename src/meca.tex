@@ -17,6 +17,22 @@ Mais la validation des hypothèses sur le chariot élévateur par des mesures su
 	\item On considère que les frottements du colis $(1)$ l'encastrent avec le chariot $(0)$.
 	\item Le repère lié au colis est $R_1 = (C, \vec x_1, \vec y_1, \vec z_1)$ et tant qu'il n'y a pas glissement du colis, $\vec e_1 = \vec e_0 \forall e \in \{x,y,z\}$.
 	\item Le centre de gravité du colis est $G$ tel que $\vec{CG} = e\cdot\vec z_1$. La masse du colis est m.
+		\begin{itemize}
+			\item On donne son opérateur d'inertie en G:$\overline{\overline{I}}_A(1) = \left[ \begin{array}{ccc}
+					A & -F & -E \\
+					-F & B & -D \\
+					-E & -D & C
+			\end{array} \right]_{B0}$
+		\end{itemize}
+	\item Les roues arrière $(2)$ et $(3)$ sont liées à $(0)$ par des liaisons pivots d'axe $(C, \vec x_0)$.
+	\item Les contacts entre les roues $(2)$ et $(3)$ et le hangar $(R)$ ont lieu en $A$ et $B$ définis par $\vec{CA} = \frac{l}{2} \cdot \vec x_0 - r\cdot \vec z_0$ et $\vec{CB} = -\frac{l}{2} \cdot \vec x_0 - r\cdot \vec z_0$, $r$ désignant le rayon des roues et $l$ la voie arrière du chariot.
+	\item Les contacts sont modélisés par des liaisons sphère-plan de centres $A$ et $B$ et de normale $\vec z_0$.
+	\item Le contact dans ces liaisons se fait avec frottement et le coefficient de frottement est noté $f$ (on supposera pour simplifier que les coefficients de frottement et d'adhérence sont identiques).
+	\item Les actions mécaniques du hangar $(R)$ sur les roues $(2)$ et $(3)$ sont modélisées dans le plan $(\vec x_0, \vec y_0)$ par des glisseurs en $A$ et $B$ de résultantes: \[
+			F(R\rightarrow 2) = T_A\cdot \vec x_0 + N_A \cdot \vec z_0 \text{ et } F(R\rightarrow 3) = T_B\cdot \vec x_0 + N_B\cdot z_0 \]
+	\item A part les liaisons entre $(R)$ et $(2)$ et entre $(R)$ et $(3)$, pour lesquelles le frottement est pris en compte, toutes les liaisons sont considérées parfaites.
+	\item On néglige la masse et l'inertie de $(0)$, $(2)$ et $(3)$ devant celle du colis $(1)$. On note $E = 0 \cup 1 \cup 2 \cup 3$. L'accélération de la pesanteur est $\vec g = -g \cdot \vec z_0$.
+	\item On se place dans un cas où le rayon de courbure $R_C$ de la trajectoire du point C, ainsi que la vitesse V de ce point par rapport au référentiel $R_g$ sont constants.
 	\item Le contact entre le colis et le chariot est modélisé par une liaison plan à plan, avec un coefficient de frottement $\mu$.
 \end{itemize}
 \begin{figure}
@@ -39,13 +55,13 @@ Avec $V=R_c \dot \theta$ on obtient:
 \begin{equation}
 	\vec a(G/R_g) = - \frac{V^2}{R_c} \vec x_0
 \end{equation}
-\paragraph{QUESTION 3}
+\paragraph{Moment dynamique en G de E dans son mouvement par rapport à $R_g$}
 \[ \vec \delta (G, E / R_g) = \frac{d}{dt} \vec \sigma (G, E/R_g)_{R_g} = \frac{d}{dt} \left( I(G,E) \cdot \vec \Omega (E / R_g) \right)_{R_g} = \frac{d}{dt} \left( - E \dot \theta \vec x_0 - D \dot \theta \vec y_0 + C \dot \theta \vec z_0 \right)_{R_g} \]
 Soit
 \begin{equation}
 	\vec \delta (G, E/R_g) = -E \dot \theta^2 \vec y_0 + D \dot \theta^2 \vec x_0
 \end{equation}
-\paragraph{QUESTION 4}
+\paragraph{Actions mécaniques de contact entre le hangar et les roues}
 \[
 	\text{TRD :} \vec F (R \rightarrow 2) + \vec F (R \rightarrow 3) + \vec F(\text{pes} \rightarrow E) = m\cdot \vec a(G/R_g)
 \]
@@ -77,7 +93,7 @@ Sur $\vec y_0$:
 \begin{equation}
 	-LN_A + \frac{l}{2}mg = -E \dot \theta^2 - m(r+e)\frac{V^2}{R_c}
 \end{equation}
-\paragraph{QUESTION 5}
+\paragraph{Efforts normaux $N_A$ et $N_B$ (en fonction de $m$, $l$, $r$, $e$, $g$, $R_c$ et $V$)}
 En négligeant $E\dot\theta^2$ :
 \begin{equation}
 	N_A = m(r+e)\frac{V^2}{l\cdot R_C} + \frac{1}{2}mg
@@ -92,27 +108,21 @@ Il y a décollement si l'effort normal devient négatif:
 	\item $N_A<0$ impossible, donc la roue extérieure reste en contact avec le hangar
 	\item $N_B<0$ possible pour V assez grand
 \end{itemize}
-\paragraph{QUESTION 6}
+\paragraph{Condition de non-renversement}
 Non décollement si $N_B>0$ implique $-m(r+e)\frac{V^2}{l\cdot R_c} > -\frac{1}{2}mg$
-\begin{equation}
+\begin{empheq}[box=\fbox]{equation}
 	\frac{V^2}{R_c} < \left( \frac{l}{2(r+e)} \right) \cdot g
-\end{equation}
-\paragraph{QUESTION 7}
+\end{empheq}
+\paragraph{Condition d'adhérence}
 Adhérence si $\left| \frac{T_A}{N_A} \right| < f$ et $\left| \frac{T_B}{N_B} \right | < f$, la tendance au glissement est suivant $\vec x_0$ donc $T_A$ et $N_A$ sont de même signe soit:
 \[ |T_A + T_B| < f(N_A + N_B) \]
 \[ T_A + T_B = -m \frac{V^2}{R_c} \]
 et \[N_A + N_B - mg = 0\]
 Soit \[ m \frac{V^2}{R_c} < f \cdot mg \]
-\begin{equation}
+\begin{empheq}[box=\fbox]{equation}
 	\frac{V^2}{R_c} < f\cdot g
-\end{equation}
-\paragraph{QUESTION 8}
-Adhérence si
-\begin{equation}
-	\frac{V^2}{R_c} < f\cdot g
-\end{equation}
-Non renversement si
-\begin{equation}
-	\frac{V^2}{R_c} < \frac{l\cdot g}{2(r+e)}
-\end{equation}
+\end{empheq}
+\subsection{Autres résultats et bilan}
+On a maintenant deux équations qui nous permettent de connaître la vitesse max qu'on pourra avoir sur une trajectoire.
 
+On peut aussi montrer que la durée minimale de parcours d'un virage est $t_1 = \pi\sqrt{\frac{R_c(r+e)}{2lg}}$, et que la durée minimale de parcours d'un couloir est $t_2=2\sqrt{\frac{l}{fg}}$.
