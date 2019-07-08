@@ -76,3 +76,6 @@ every listing line={\textcolor{green}{\small\ttfamily\bfseries \$> }}}
 {\end{center}
  \end{quote}}
 \lstset{language=Python}
+
+%encadrer des équations
+\usepackage{empheq}
