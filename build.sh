@@ -1,12 +1,14 @@
 #!/bin/sh
 pdf="pdflatex --shell-escape main.tex"
 bib="biber main"
-if [ "$1" = "bib" ]; then
-echo "compiler avec biblio!"
+if [ "$1" = "nobib" ]; then
+echo "compiler sans biblio!"
 $pdf
-$bib
 $pdf
 else
 echo "compiler sans biblio!"
+$pdf
+$bib
+$pdf
 $pdf
 fi;

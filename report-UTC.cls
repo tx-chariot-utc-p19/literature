@@ -1,6 +1,6 @@
 \ProvidesClass{report-UTC}
 
-\LoadClass[a4paper,12pt,openright]{article}
+\LoadClass[a4paper,12pt,openright,french]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
@@ -17,7 +17,7 @@
 \usepackage{subfiles}
 \usepackage{listings}
 \usepackage{lastpage}
-\usepackage[english]{babel} % Package babel pour l'anglais
+\usepackage[french]{babel} % Package babel pour l'anglais
 \usepackage[T1]{fontenc}    % Package pour les accentuations
 \usepackage[utf8]{inputenc}  % Français
 \usepackage{subfiles}
@@ -50,7 +50,7 @@
 
 \usepackage{multicol}
 \usepackage{csquotes}
-\usepackage[backend=biber]{biblatex}
+\usepackage[backend=biber, language=french]{biblatex}
 \addbibresource{bibli.bib}
 
 
